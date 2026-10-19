@@ -2,13 +2,15 @@
 {% block titulo %}Excluir demanda{% endblock %}
 {% block conteudo %}
 <div class="radar-estreito">
-  <h1 class="h4 mb-3">Excluir demanda?</h1>
-  <p class="text-break"><strong>{{ demanda.titulo }}</strong></p>
-  <p>A demanda, o histórico dela e a presença no Top 3 serão apagados. Não há como desfazer.</p>
-  <form method="post" class="d-flex gap-2" data-trava-envio>
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Excluir</button>
-    <a class="btn btn-link" href="{% url 'demandas:detalhe' demanda.pk %}">Cancelar</a>
-  </form>
+  <div class="radar-pagina-topo"><h1>Excluir demanda?</h1></div>
+  <section class="radar-cartao radar-cartao-corpo radar-perigo">
+    <p class="text-break fw-semibold mb-2">{{ demanda.titulo }}</p>
+    <p class="text-secondary">A demanda, o histórico dela e a presença no Top 3 serão apagados. Não há como desfazer.</p>
+    <form method="post" class="d-flex gap-2" data-trava-envio>
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Excluir</button>
+      <a class="btn btn-outline-secondary" href="{% url 'demandas:detalhe' demanda.pk %}">Cancelar</a>
+    </form>
+  </section>
 </div>
 {% endblock %}

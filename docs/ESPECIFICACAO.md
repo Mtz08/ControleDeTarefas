@@ -234,8 +234,8 @@ Orientação prática de projeto, não parecer jurídico. A empresa é a control
 ## 10. Interface
 
 - Desktop first (computador do trabalho), sem quebrar em telas menores.
-- Identidade visual sóbria: cor principal azul-petróleo `#0F4C5C`, fundo `#F7F9FA`, texto `#1F2933`.
-- Prioridade e status sempre com cor **e** texto, sem depender só da cor: Alta `#B42318`, Média `#B54708`, Baixa `#475467`, Concluída `#067647`. Contraste mínimo WCAG AA.
+- Identidade visual: **tema escuro** profissional (alterado a pedido em 19/10/2026), com fundo `#0A0F13`, superfícies `#11181D`, texto `#E6EDF1`, marca azul-petróleo `#0F4C5C` no logotipo, botões em `#0F766E` e destaques em `#2DD4BF`. Menu lateral com ícones e barra de captura fixa no topo.
+- Prioridade e status sempre com cor **e** texto, sem depender só da cor (etiquetas com texto claro sobre fundo tingido: Alta vermelho, Média âmbar, Baixa cinza, Concluída verde). Contraste mínimo WCAG AA. A impressão sai em fundo branco.
 - Padrão brasileiro: datas `dd/mm/aaaa`, "há 3 dias", textos em pt-BR.
 - Menos cliques: captura rápida em todas as telas, atalhos `n` (nova) e `/` (busca), foco automático nos campos.
 - Estados vazios amigáveis (ex.: "Caixa de entrada zerada. Bom trabalho!").

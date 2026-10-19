@@ -1,71 +1,86 @@
 {% extends "base_simples.html" %}{% load radar %}
 {% block atributos_body %}data-url-lista="{% url 'demandas:lista' %}"{% endblock %}
 {% block corpo %}
-<a class="visually-hidden-focusable" href="#conteudo">Pular para o conteúdo</a>
+<a class="visually-hidden-focusable radar-pular" href="#conteudo">Pular para o conteúdo</a>
+{% url 'painel:inicio' as url_painel %}{% url 'demandas:lista' as url_lista %}{% url 'painel:resumo' as url_resumo %}
+{% url 'contas:meus_dados' as url_dados %}{% url 'contas:privacidade' as url_privacidade %}
 
-<nav class="navbar navbar-expand-lg navbar-dark radar-nav d-print-none">
-  <div class="container-xl">
-    <a class="navbar-brand fw-semibold" href="{% url 'painel:inicio' %}">Radar de Demandas</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu"
-            aria-controls="menu" aria-expanded="false" aria-label="Abrir menu">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="menu">
-      {% url 'painel:inicio' as url_painel %}{% url 'demandas:lista' as url_lista %}
-      {% url 'painel:resumo' as url_resumo %}{% url 'contas:meus_dados' as url_dados %}
-      <ul class="navbar-nav me-auto">
-        {% include "_menu_item.html" with url=url_painel rotulo="Painel do dia" ativo=url_painel|ativo_em:request.path %}
-        {% include "_menu_item.html" with url=url_lista rotulo="Demandas" ativo=url_lista|ativo_em:request.path %}
-        {% include "_menu_item.html" with url=url_resumo rotulo="Resumo" ativo=url_resumo|ativo_em:request.path %}
-        {% include "_menu_item.html" with url=url_dados rotulo="Meus dados" ativo=url_dados|ativo_em:request.path %}
-      </ul>
-      <ul class="navbar-nav align-items-lg-center">
-        <li class="nav-item"><a class="nav-link" href="{% url 'contas:senha' %}">Trocar senha</a></li>
-        <li class="nav-item">
-          <form method="post" action="{% url 'contas:sair' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-link nav-link">Sair</button>
-          </form>
-        </li>
-      </ul>
+<div class="radar-app">
+  <aside class="radar-sidebar d-print-none">
+    <div class="radar-sidebar-topo">
+      <a class="radar-marca" href="{{ url_painel }}">
+        <span class="radar-logo">{% include "_icone.html" with nome="radar" %}</span>
+        <span class="radar-marca-texto"><strong>Radar</strong><small>de Demandas</small></span>
+      </a>
+      <button class="radar-icone-botao d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#menu"
+              aria-controls="menu" aria-expanded="false" aria-label="Abrir menu">{% include "_icone.html" with nome="menu" %}</button>
     </div>
-  </div>
-</nav>
 
-<div class="radar-captura border-bottom d-print-none">
-  <div class="container-xl py-2">
-    <form method="post" action="{% url 'demandas:capturar' %}" class="d-flex flex-wrap gap-2" data-trava-envio>
-      {% csrf_token %}
-      <input type="hidden" name="proximo" value="{{ request.get_full_path }}">
-      <label for="captura-titulo" class="visually-hidden">Nova demanda</label>
-      <input id="captura-titulo" name="titulo" class="form-control flex-grow-1 radar-captura-titulo"
-             placeholder="Nova demanda… (atalho: n)" maxlength="200" required autocomplete="off">
-      <label for="captura-origem" class="visually-hidden">Origem</label>
-      <select id="captura-origem" name="origem" class="form-select w-auto">
-        {% for valor, rotulo in captura_origens %}
-          <option value="{{ valor }}"{% if valor == "outro" %} selected{% endif %}>{{ rotulo }}</option>
-        {% endfor %}
-      </select>
-      <button type="submit" class="btn btn-primary">Registrar</button>
-    </form>
+    <div class="collapse d-lg-flex radar-sidebar-corpo" id="menu">
+      <nav aria-label="Navegação principal">
+        <p class="radar-nav-rotulo">Trabalho</p>
+        <ul class="radar-nav">
+          {% include "_menu_item.html" with url=url_painel rotulo="Painel do dia" icone="painel" ativo=url_painel|ativo_em:request.path %}
+          {% include "_menu_item.html" with url=url_lista rotulo="Demandas" icone="demandas" ativo=url_lista|ativo_em:request.path %}
+          {% include "_menu_item.html" with url=url_resumo rotulo="Resumo" icone="resumo" ativo=url_resumo|ativo_em:request.path %}
+        </ul>
+        <p class="radar-nav-rotulo">Conta</p>
+        <ul class="radar-nav">
+          {% include "_menu_item.html" with url=url_dados rotulo="Meus dados" icone="dados" ativo=url_dados|ativo_em:request.path %}
+          {% include "_menu_item.html" with url=url_privacidade rotulo="Privacidade" icone="privacidade" ativo=url_privacidade|ativo_em:request.path %}
+        </ul>
+      </nav>
+
+      <div class="radar-usuario">
+        <span class="radar-avatar" aria-hidden="true">{{ user.get_username|first|upper }}</span>
+        <div class="radar-usuario-info">
+          <span class="radar-usuario-nome">{{ user.get_username }}</span>
+          <a href="{% url 'contas:senha' %}">Trocar senha</a>
+        </div>
+        <form method="post" action="{% url 'contas:sair' %}">
+          {% csrf_token %}
+          <button type="submit" class="radar-icone-botao" title="Sair" aria-label="Sair">{% include "_icone.html" with nome="sair" %}</button>
+        </form>
+      </div>
+    </div>
+  </aside>
+
+  <div class="radar-principal">
+    <header class="radar-topo d-print-none">
+      <form method="post" action="{% url 'demandas:capturar' %}" class="radar-captura" data-trava-envio>
+        {% csrf_token %}
+        <input type="hidden" name="proximo" value="{{ request.get_full_path }}">
+        <span class="radar-captura-icone">{% include "_icone.html" with nome="mais" %}</span>
+        <label for="captura-titulo" class="visually-hidden">Nova demanda</label>
+        <input id="captura-titulo" name="titulo" class="radar-captura-titulo"
+               placeholder="Registrar nova demanda…" maxlength="200" required autocomplete="off">
+        <kbd class="radar-atalho d-none d-md-inline-block" title="Atalho de teclado">N</kbd>
+        <label for="captura-origem" class="visually-hidden">Origem</label>
+        <select id="captura-origem" name="origem" class="form-select form-select-sm radar-captura-origem">
+          {% for valor, rotulo in captura_origens %}
+            <option value="{{ valor }}"{% if valor == "outro" %} selected{% endif %}>{{ rotulo }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary btn-sm">Registrar</button>
+      </form>
+    </header>
+
+    <main id="conteudo" class="radar-conteudo">
+      {% if messages %}
+        <div class="radar-mensagens d-print-none">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="{% if message.level >= 30 %}alert{% else %}status{% endif %}">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% block conteudo %}{% endblock %}
+      <footer class="radar-rodape d-print-none">
+        Atalhos: <kbd>N</kbd> nova demanda · <kbd>/</kbd> buscar
+      </footer>
+    </main>
   </div>
 </div>
-
-<main id="conteudo" class="container-xl py-4">
-  {% if messages %}
-    <div class="d-print-none">
-      {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="{% if message.level >= 30 %}alert{% else %}status{% endif %}">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-  {% block conteudo %}{% endblock %}
-</main>
-
-<footer class="container-xl pb-4 small text-secondary d-print-none">
-  Radar de Demandas · <a href="{% url 'contas:privacidade' %}">Privacidade</a> · Atalhos: <kbd>n</kbd> nova demanda, <kbd>/</kbd> buscar
-</footer>
 {% endblock %}

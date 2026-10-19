@@ -1,16 +1,18 @@
 {% load radar %}
-<li class="list-group-item radar-item">
-  <div class="d-flex flex-wrap align-items-center gap-2">
-    <a class="fw-semibold me-auto text-break" href="{% url 'demandas:detalhe' demanda.pk %}">{{ demanda.titulo }}</a>
-    {% if demanda|atrasada %}<span class="badge radar-atrasada">Atrasada</span>{% elif demanda|vence_hoje %}<span class="badge radar-hoje">Vence hoje</span>{% endif %}
+<li class="radar-item radar-item-{{ demanda.prioridade }}">
+  <div class="radar-item-linha">
+    <a class="radar-item-titulo" href="{% url 'demandas:detalhe' demanda.pk %}">{{ demanda.titulo }}</a>
+    {% include "demandas/_prazo.html" %}
     {% include "demandas/_prioridade.html" %}
     {% include "demandas/_status.html" %}
   </div>
-  <div class="small text-secondary mt-1">
-    {{ demanda.get_origem_display }}{% if demanda.categoria %} · {{ demanda.categoria.nome }}{% endif %}{% if demanda.solicitante %} · {{ demanda.solicitante }}{% endif %}
-    · recebida {{ demanda.recebida_em|ha_dias }}
-    {% if demanda.prazo %} · prazo {{ demanda.prazo|date:"d/m/Y" }}{% endif %}
-    {% if demanda.status == "aguardando" %} · aguardando {{ demanda.aguardando_quem }} {{ demanda.status_alterado_em|ha_dias }}{% endif %}
+  <div class="radar-item-meta">
+    <span>{{ demanda.get_origem_display }}</span>
+    {% if demanda.categoria %}<span>{{ demanda.categoria.nome }}</span>{% endif %}
+    {% if demanda.solicitante %}<span>{{ demanda.solicitante }}</span>{% endif %}
+    <span>recebida {{ demanda.recebida_em|ha_dias }}</span>
+    {% if demanda.prazo %}<span>prazo {{ demanda.prazo|date:"d/m/Y" }}</span>{% endif %}
+    {% if demanda.status == "aguardando" %}<span>aguardando {{ demanda.aguardando_quem }} {{ demanda.status_alterado_em|ha_dias }}</span>{% endif %}
   </div>
   {% if acoes %}{% include "demandas/_acoes.html" %}{% endif %}
 </li>

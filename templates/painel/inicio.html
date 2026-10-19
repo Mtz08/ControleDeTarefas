@@ -1,98 +1,116 @@
 {% extends "base.html" %}{% load radar %}
 {% block titulo %}Painel do dia{% endblock %}
 {% block conteudo %}
-<div class="d-flex flex-wrap align-items-baseline gap-2 mb-3">
-  <h1 class="h3 mb-0 me-auto">Painel do dia</h1>
-  <span class="text-secondary">{{ hoje|date:"l, d/m/Y" }}</span>
+<div class="radar-pagina-topo">
+  <div>
+    <div class="radar-sobretitulo">{{ hoje|date:"l, d \d\e F" }}</div>
+    <h1>Painel do dia</h1>
+    <p class="radar-pagina-sub">{{ total_abertas }} demanda(s) aberta(s) · {{ caixa|length }} na caixa de entrada</p>
+  </div>
+  <a class="btn btn-outline-secondary btn-sm" href="{% url 'demandas:lista' %}">Ver todas as demandas</a>
 </div>
 
 {# 1. Top 3 do dia #}
-<section class="card mb-4 radar-top" aria-labelledby="titulo-top">
-  <div class="card-body">
-    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-      <h2 class="h5 mb-0 me-auto" id="titulo-top">Top 3 do dia</h2>
-      {% if existe_top_anterior and top|length < 3 %}
-        <form method="post" action="{% url 'painel:top_trazer' %}" data-trava-envio>
-          {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-outline-primary">Trazer pendentes do último Top 3</button>
-        </form>
-      {% endif %}
+<section class="radar-cartao radar-top radar-cartao-corpo mb-4" aria-labelledby="titulo-top">
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <div class="me-auto">
+      <h2 id="titulo-top" class="d-flex align-items-center gap-2">{% include "_icone.html" with nome="estrela" %} Top 3 do dia</h2>
     </div>
-    {% if top %}
-      <ol class="list-group list-group-numbered mb-2">
-        {% for foco in top %}
-          {% with demanda=foco.demanda %}
-          <li class="list-group-item d-flex flex-wrap align-items-center gap-2">
-            <a class="fw-semibold me-auto text-break" href="{% url 'demandas:detalhe' demanda.pk %}">{{ demanda.titulo }}</a>
-            {% include "demandas/_prioridade.html" %}{% include "demandas/_status.html" %}
-            {% if demanda.aberta %}
-              {% include "demandas/_botao_acao.html" with nome="concluir" rotulo="Concluir" estilo="btn-outline-success" %}
-            {% endif %}
-            <form method="post" action="{% url 'painel:top_remover' foco.pk %}" data-trava-envio>
-              {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-link">Tirar do Top 3<span class="visually-hidden">: {{ demanda.titulo }}</span></button>
-            </form>
-          </li>
-          {% endwith %}
-        {% endfor %}
-      </ol>
-    {% else %}
-      <p class="text-secondary">Escolha até 3 demandas para hoje. Elas são o seu norte do dia.</p>
-    {% endif %}
-    {% if top|length < 3 and candidatas %}
-      <form method="post" action="{% url 'painel:top_adicionar' %}" class="d-flex flex-wrap gap-2 d-print-none" data-trava-envio>
+    {% if existe_top_anterior and top|length < 3 %}
+      <form method="post" action="{% url 'painel:top_trazer' %}" data-trava-envio>
         {% csrf_token %}
-        <label class="visually-hidden" for="top-demanda">Demanda para o Top 3</label>
-        <select class="form-select w-auto flex-grow-1" name="demanda" id="top-demanda" required>
-          <option value="">Escolha uma demanda aberta…</option>
-          {% for demanda in candidatas %}
-            <option value="{{ demanda.pk }}">{% if demanda|atrasada %}[Atrasada] {% endif %}{{ demanda.titulo|truncatechars:90 }}</option>
-          {% endfor %}
-        </select>
-        <button type="submit" class="btn btn-primary">Adicionar ao Top 3</button>
+        <button type="submit" class="btn btn-sm btn-outline-primary">Trazer pendentes do último Top 3</button>
       </form>
     {% endif %}
   </div>
+
+  {% if top %}
+    <ol class="radar-top-lista mb-3">
+      {% for foco in top %}
+        {% with demanda=foco.demanda %}
+        <li class="radar-top-item">
+          <span class="radar-top-numero" aria-hidden="true">{{ foco.ordem }}</span>
+          <a class="radar-item-titulo" href="{% url 'demandas:detalhe' demanda.pk %}">{{ demanda.titulo }}</a>
+          {% include "demandas/_prazo.html" %}
+          {% include "demandas/_prioridade.html" %}
+          {% include "demandas/_status.html" %}
+          {% if demanda.aberta %}
+            {% include "demandas/_botao_acao.html" with nome="concluir" rotulo="Concluir" estilo="btn-outline-success" %}
+          {% endif %}
+          <form method="post" action="{% url 'painel:top_remover' foco.pk %}" data-trava-envio>
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-link">Tirar<span class="visually-hidden"> do Top 3: {{ demanda.titulo }}</span></button>
+          </form>
+        </li>
+        {% endwith %}
+      {% endfor %}
+    </ol>
+  {% else %}
+    <p class="radar-top-vazio">Escolha até 3 demandas para hoje. Elas são o seu norte do dia.</p>
+  {% endif %}
+
+  {% if top|length < 3 and candidatas %}
+    <form method="post" action="{% url 'painel:top_adicionar' %}" class="d-flex flex-wrap gap-2 d-print-none" data-trava-envio>
+      {% csrf_token %}
+      <label class="visually-hidden" for="top-demanda">Demanda para o Top 3</label>
+      <select class="form-select form-select-sm flex-grow-1 w-auto" name="demanda" id="top-demanda" required>
+        <option value="">Escolha uma demanda aberta…</option>
+        {% for demanda in candidatas %}
+          <option value="{{ demanda.pk }}">{% if demanda|atrasada %}[Atrasada] {% endif %}{{ demanda.titulo|truncatechars:90 }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-sm btn-primary">Adicionar ao Top 3</button>
+    </form>
+  {% endif %}
 </section>
 
 <div class="row g-4">
-  <div class="col-lg-6">
+  <div class="col-xl-6">
     {% include "painel/_bloco.html" with titulo="Caixa de entrada" demandas=caixa id_bloco="bloco-caixa" vazio="Caixa de entrada zerada. Bom trabalho!" %}
-    {% include "painel/_bloco.html" with titulo="Atrasadas" demandas=atrasadas id_bloco="bloco-atrasadas" vazio="Nada atrasado." %}
+    {% include "painel/_bloco.html" with titulo="Atrasadas" demandas=atrasadas id_bloco="bloco-atrasadas" vazio="Nada atrasado." alerta=True %}
     {% include "painel/_bloco.html" with titulo="Vencem hoje" demandas=vencem_hoje id_bloco="bloco-hoje" vazio="Nada vence hoje." %}
   </div>
-  <div class="col-lg-6">
+  <div class="col-xl-6">
     {% include "painel/_bloco.html" with titulo="Próximos 7 dias" demandas=proximos id_bloco="bloco-proximos" vazio="Nenhum prazo nos próximos 7 dias." %}
 
-    <section class="mb-4" aria-labelledby="bloco-aguardando">
-      <h2 class="h5 d-flex align-items-center gap-2" id="bloco-aguardando">Aguardando terceiro <span class="badge text-bg-light border">{{ aguardando|length }}</span></h2>
+    <section class="radar-cartao radar-secao" aria-labelledby="bloco-aguardando">
+      <header class="radar-secao-topo">
+        <h2 id="bloco-aguardando">Aguardando terceiro</h2>
+        <span class="radar-contagem">{{ aguardando|length }}</span>
+      </header>
       {% if aguardando %}
-        <ul class="list-group">
+        <ul class="radar-lista">
           {% for demanda in aguardando %}
             {% with dias=demanda.status_alterado_em|dias_desde %}
-            <li class="list-group-item{% if dias >= dias_para_cobrar %} radar-cobrar{% endif %}">
-              <div class="d-flex flex-wrap align-items-center gap-2">
-                <a class="fw-semibold me-auto text-break" href="{% url 'demandas:detalhe' demanda.pk %}">{{ demanda.titulo }}</a>
-                {% if dias >= dias_para_cobrar %}<span class="badge radar-atrasada">Hora de cobrar</span>{% endif %}
+            <li class="radar-item radar-item-{{ demanda.prioridade }}">
+              <div class="radar-item-linha">
+                <a class="radar-item-titulo" href="{% url 'demandas:detalhe' demanda.pk %}">{{ demanda.titulo }}</a>
+                {% if dias >= dias_para_cobrar %}<span class="radar-badge radar-aviso">Hora de cobrar</span>{% endif %}
               </div>
-              <div class="small text-secondary">Aguardando {{ demanda.aguardando_quem }} · {{ demanda.status_alterado_em|ha_dias }}</div>
+              <div class="radar-item-meta">
+                <span>aguardando {{ demanda.aguardando_quem }}</span>
+                <span>{{ demanda.status_alterado_em|ha_dias }}</span>
+              </div>
             </li>
             {% endwith %}
           {% endfor %}
         </ul>
       {% else %}
-        <div class="radar-vazio">Nada aguardando terceiros.</div>
+        <p class="radar-vazio">Nada aguardando terceiros.</p>
       {% endif %}
     </section>
 
-    <section class="mb-4" aria-labelledby="bloco-sem-prazo">
-      <h2 class="h5" id="bloco-sem-prazo">Abertas sem prazo</h2>
-      <p>{% if sem_prazo %}<a href="{% url 'demandas:lista' %}?status=abertas&amp;sem_prazo=on">{{ sem_prazo }} demanda(s) sem prazo</a>{% else %}Todas as abertas têm prazo.{% endif %}</p>
+    <section class="radar-cartao radar-secao" aria-labelledby="bloco-sem-prazo">
+      <header class="radar-secao-topo">
+        <h2 id="bloco-sem-prazo">Abertas sem prazo</h2>
+        <span class="radar-contagem">{{ sem_prazo }}</span>
+      </header>
+      <p class="radar-vazio">{% if sem_prazo %}<a href="{% url 'demandas:lista' %}?status=abertas&amp;sem_prazo=on">Ver as {{ sem_prazo }} demanda(s) sem prazo</a>{% else %}Todas as abertas têm prazo.{% endif %}</p>
     </section>
 
     {% include "painel/_bloco.html" with titulo="Concluídas hoje" demandas=concluidas_hoje id_bloco="bloco-concluidas" vazio="Nenhuma concluída hoje ainda." %}
   </div>
 </div>
 
-<p class="border-top pt-3 text-secondary">{{ total_abertas }} demanda(s) aberta(s) no total · <a href="{% url 'demandas:lista' %}">Ver lista completa</a></p>
+<p class="radar-rodape">{{ total_abertas }} demanda(s) aberta(s) no total · <a href="{% url 'demandas:lista' %}">Ver lista completa</a></p>
 {% endblock %}

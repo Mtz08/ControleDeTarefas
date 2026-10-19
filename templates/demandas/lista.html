@@ -1,38 +1,41 @@
 {% extends "base.html" %}
 {% block titulo %}Demandas{% endblock %}
 {% block conteudo %}
-<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-  <h1 class="h3 mb-0 me-auto">Demandas</h1>
-  <a class="btn btn-primary" href="{% url 'demandas:nova' %}">Cadastro completo</a>
+<div class="radar-pagina-topo">
+  <div>
+    <h1>Demandas</h1>
+    <p class="radar-pagina-sub" aria-live="polite">{{ pagina.paginator.count }} demanda(s) encontrada(s)</p>
+  </div>
+  <a class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2" href="{% url 'demandas:nova' %}">{% include "_icone.html" with nome="mais" %} Cadastro completo</a>
 </div>
 
-<form method="get" class="card card-body mb-3 radar-filtros d-print-none">
-  <div class="row g-2 align-items-end">
-    <div class="col-12 col-lg-4">{% include "_campo.html" with campo=form.q %}</div>
-    <div class="col-6 col-lg-2">{% include "_campo.html" with campo=form.status %}</div>
-    <div class="col-6 col-lg-2">{% include "_campo.html" with campo=form.prioridade %}</div>
-    <div class="col-6 col-lg-2">{% include "_campo.html" with campo=form.origem %}</div>
-    <div class="col-6 col-lg-2">{% include "_campo.html" with campo=form.categoria %}</div>
-    <div class="col-6 col-lg-2">{% include "_campo.html" with campo=form.de %}</div>
-    <div class="col-6 col-lg-2">{% include "_campo.html" with campo=form.ate %}</div>
-    <div class="col-6 col-lg-2">{% include "_campo.html" with campo=form.atrasadas %}</div>
-    <div class="col-6 col-lg-2">{% include "_campo.html" with campo=form.sem_prazo %}</div>
-    <div class="col-12 col-lg-4 mb-3 d-flex gap-2">
+<form method="get" class="radar-cartao radar-cartao-corpo mb-4 d-print-none">
+  <div class="row g-3 align-items-end">
+    <div class="col-12 col-xl-4">{% include "_campo.html" with campo=form.q %}</div>
+    <div class="col-6 col-md-3 col-xl-2">{% include "_campo.html" with campo=form.status %}</div>
+    <div class="col-6 col-md-3 col-xl-2">{% include "_campo.html" with campo=form.prioridade %}</div>
+    <div class="col-6 col-md-3 col-xl-2">{% include "_campo.html" with campo=form.origem %}</div>
+    <div class="col-6 col-md-3 col-xl-2">{% include "_campo.html" with campo=form.categoria %}</div>
+    <div class="col-6 col-md-3 col-xl-2">{% include "_campo.html" with campo=form.de %}</div>
+    <div class="col-6 col-md-3 col-xl-2">{% include "_campo.html" with campo=form.ate %}</div>
+    <div class="col-6 col-md-3 col-xl-2">{% include "_campo.html" with campo=form.atrasadas %}</div>
+    <div class="col-6 col-md-3 col-xl-2">{% include "_campo.html" with campo=form.sem_prazo %}</div>
+    <div class="col-12 col-xl-4 mb-3 d-flex gap-2 justify-content-xl-end">
       <button type="submit" class="btn btn-primary">Filtrar</button>
-      <a class="btn btn-link" href="{% url 'demandas:lista' %}">Limpar</a>
+      <a class="btn btn-outline-secondary" href="{% url 'demandas:lista' %}">Limpar filtros</a>
     </div>
   </div>
 </form>
 
-<p class="text-secondary small" aria-live="polite">{{ pagina.paginator.count }} demanda(s) encontrada(s).</p>
-
 {% if pagina.object_list %}
-  <ul class="list-group mb-3">
-    {% for demanda in pagina.object_list %}{% include "demandas/_item.html" with acoes=True %}{% endfor %}
-  </ul>
+  <section class="radar-cartao mb-3">
+    <ul class="radar-lista">
+      {% for demanda in pagina.object_list %}{% include "demandas/_item.html" with acoes=True %}{% endfor %}
+    </ul>
+  </section>
   {% if pagina.has_other_pages %}
   <nav aria-label="Paginação">
-    <ul class="pagination">
+    <ul class="pagination pagination-sm">
       {% if pagina.has_previous %}<li class="page-item"><a class="page-link" href="{% querystring pagina=pagina.previous_page_number %}">Anterior</a></li>{% endif %}
       <li class="page-item disabled"><span class="page-link">Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span></li>
       {% if pagina.has_next %}<li class="page-item"><a class="page-link" href="{% querystring pagina=pagina.next_page_number %}">Próxima</a></li>{% endif %}
@@ -40,6 +43,6 @@
   </nav>
   {% endif %}
 {% else %}
-  <div class="radar-vazio">Nenhuma demanda com esses filtros.</div>
+  <div class="radar-vazio-caixa">Nenhuma demanda com esses filtros.</div>
 {% endif %}
 {% endblock %}

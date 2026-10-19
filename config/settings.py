@@ -55,7 +55,7 @@ if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
     CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
 
-ADMIN_URL = os.environ.get("ADMIN_URL", "admin/").strip().strip("/") + "/"
+ADMIN_URL = (os.environ.get("ADMIN_URL", "").strip().strip("/") or "admin") + "/"
 if not DEBUG and not TESTANDO and ADMIN_URL == "admin/":
     raise ImproperlyConfigured("Em produção, defina ADMIN_URL com um caminho difícil de adivinhar.")
 

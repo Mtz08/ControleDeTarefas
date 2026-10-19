@@ -1,11 +1,11 @@
 {% comment %}Ações rápidas. Variáveis: demanda; completo (bool) mostra também cancelar/editar/excluir.{% endcomment %}
-<div class="d-flex flex-wrap gap-1 mt-2 radar-acoes d-print-none">
+<div class="radar-acoes d-print-none">
   {% if demanda.status == "nova" %}
     <a class="btn btn-sm btn-primary" href="{% url 'demandas:editar' demanda.pk %}">Triar</a>
   {% endif %}
   {% if demanda.aberta %}
     {% if demanda.status != "em_andamento" %}
-      {% include "demandas/_botao_acao.html" with nome="iniciar" rotulo="Iniciar" estilo="btn-outline-primary" %}
+      {% include "demandas/_botao_acao.html" with nome="iniciar" rotulo="Iniciar" estilo="btn-outline-secondary" %}
     {% endif %}
     {% if demanda.status != "aguardando" %}
       <a class="btn btn-sm btn-outline-secondary" href="{% url 'demandas:aguardar' demanda.pk %}">Aguardar</a>

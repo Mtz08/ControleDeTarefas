@@ -62,3 +62,5 @@ python manage.py makemigrations                 # gerar migrações após mudar 
 - CSP sem inline; barras do resumo recebem largura via `static/js/radar.js` (`data-largura`).
 - Sessões expiradas e tentativas do axes são limpas sem tarefa agendada (no login / cooloff).
 - `security.W021` (HSTS preload) silenciado de propósito.
+- Visual: tema escuro (`data-bs-theme="dark"` + tokens `--radar-*` em `static/css/radar.css`),
+  menu lateral, ícones SVG em `templates/_icone.html`. Nada de `style=""` inline (CSP).

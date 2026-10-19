@@ -2,18 +2,23 @@
 {% block titulo %}{% if not demanda %}Nova demanda{% elif demanda.status == "nova" %}Triar demanda{% else %}Editar demanda{% endif %}{% endblock %}
 {% block conteudo %}
 <div class="radar-medio">
-  <h1 class="h3 mb-1">{% if not demanda %}Nova demanda{% elif demanda.status == "nova" %}Triar demanda{% else %}Editar demanda{% endif %}</h1>
-  {% if demanda and demanda.status == "nova" %}
-    <p class="text-secondary">Revise prioridade, prazo, origem e categoria e escolha o novo status para tirá-la da caixa de entrada.</p>
-  {% endif %}
+  {% if demanda %}<a class="radar-voltar" href="{% url 'demandas:detalhe' demanda.pk %}">← Voltar para a demanda</a>{% endif %}
+  <div class="radar-pagina-topo">
+    <div>
+      <h1>{% if not demanda %}Nova demanda{% elif demanda.status == "nova" %}Triar demanda{% else %}Editar demanda{% endif %}</h1>
+      {% if demanda and demanda.status == "nova" %}
+        <p class="radar-pagina-sub">Revise prioridade, prazo, origem e categoria e escolha o novo status para tirá-la da caixa de entrada.</p>
+      {% endif %}
+    </div>
+  </div>
   <div class="alert alert-info py-2 small" role="note">{{ aviso }}</div>
   {% include "_erros_form.html" %}
-  <form method="post" class="card card-body" data-trava-envio>
+  <form method="post" class="radar-cartao radar-cartao-corpo" data-trava-envio>
     {% csrf_token %}
     {{ form.versao }}
     {% include "_campo.html" with campo=form.titulo %}
     {% include "_campo.html" with campo=form.descricao %}
-    <div class="row">
+    <div class="row g-3">
       <div class="col-md-6">{% include "_campo.html" with campo=form.solicitante %}</div>
       <div class="col-md-6">{% include "_campo.html" with campo=form.referencia %}</div>
       <div class="col-md-6">{% include "_campo.html" with campo=form.origem %}</div>
@@ -24,9 +29,9 @@
       <div class="col-md-6">{% include "_campo.html" with campo=form.status %}</div>
       <div class="col-md-6" data-mostrar-se-status="aguardando">{% include "_campo.html" with campo=form.aguardando_quem %}</div>
     </div>
-    <div class="d-flex gap-2">
-      <button type="submit" class="btn btn-primary">Salvar</button>
-      <a class="btn btn-link" href="{% if demanda %}{% url 'demandas:detalhe' demanda.pk %}{% else %}{% url 'demandas:lista' %}{% endif %}">Cancelar</a>
+    <div class="d-flex gap-2 pt-2 border-top mt-2">
+      <button type="submit" class="btn btn-primary mt-3">Salvar</button>
+      <a class="btn btn-outline-secondary mt-3" href="{% if demanda %}{% url 'demandas:detalhe' demanda.pk %}{% else %}{% url 'demandas:lista' %}{% endif %}">Cancelar</a>
     </div>
   </form>
 </div>

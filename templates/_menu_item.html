@@ -1,1 +1,1 @@
-<li class="nav-item"><a class="nav-link{% if ativo %} active{% endif %}"{% if ativo %} aria-current="page"{% endif %} href="{{ url }}">{{ rotulo }}</a></li>
+<li><a class="radar-nav-link{% if ativo %} ativo{% endif %}"{% if ativo %} aria-current="page"{% endif %} href="{{ url }}">{% include "_icone.html" with nome=icone %}<span>{{ rotulo }}</span></a></li>

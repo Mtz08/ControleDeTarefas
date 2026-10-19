@@ -1,11 +1,14 @@
-{% comment %}Bloco do painel. Variáveis: titulo, demandas, vazio (mensagem), id_bloco.{% endcomment %}
-<section class="mb-4" aria-labelledby="{{ id_bloco }}">
-  <h2 class="h5 d-flex align-items-center gap-2" id="{{ id_bloco }}">{{ titulo }} <span class="badge text-bg-light border">{{ demandas|length }}</span></h2>
+{% comment %}Bloco do painel. Variáveis: titulo, demandas, vazio, id_bloco; alerta (bool) destaca o título.{% endcomment %}
+<section class="radar-cartao radar-secao{% if alerta and demandas %} radar-secao-alerta{% endif %}" aria-labelledby="{{ id_bloco }}">
+  <header class="radar-secao-topo">
+    <h2 id="{{ id_bloco }}">{{ titulo }}</h2>
+    <span class="radar-contagem">{{ demandas|length }}</span>
+  </header>
   {% if demandas %}
-    <ul class="list-group">
+    <ul class="radar-lista">
       {% for demanda in demandas %}{% include "demandas/_item.html" with acoes=True %}{% endfor %}
     </ul>
   {% else %}
-    <div class="radar-vazio">{{ vazio }}</div>
+    <p class="radar-vazio">{{ vazio }}</p>
   {% endif %}
 </section>

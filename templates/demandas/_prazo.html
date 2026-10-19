@@ -1,0 +1,1 @@
+{% load radar %}{% if demanda|atrasada %}<span class="radar-badge radar-alerta">Atrasada</span>{% elif demanda|vence_hoje %}<span class="radar-badge radar-aviso">Vence hoje</span>{% endif %}
