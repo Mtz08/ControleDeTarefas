@@ -1,0 +1,71 @@
+{% extends "base_simples.html" %}{% load radar %}
+{% block atributos_body %}data-url-lista="{% url 'demandas:lista' %}"{% endblock %}
+{% block corpo %}
+<a class="visually-hidden-focusable" href="#conteudo">Pular para o conteúdo</a>
+
+<nav class="navbar navbar-expand-lg navbar-dark radar-nav d-print-none">
+  <div class="container-xl">
+    <a class="navbar-brand fw-semibold" href="{% url 'painel:inicio' %}">Radar de Demandas</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu"
+            aria-controls="menu" aria-expanded="false" aria-label="Abrir menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="menu">
+      {% url 'painel:inicio' as url_painel %}{% url 'demandas:lista' as url_lista %}
+      {% url 'painel:resumo' as url_resumo %}{% url 'contas:meus_dados' as url_dados %}
+      <ul class="navbar-nav me-auto">
+        {% include "_menu_item.html" with url=url_painel rotulo="Painel do dia" ativo=url_painel|ativo_em:request.path %}
+        {% include "_menu_item.html" with url=url_lista rotulo="Demandas" ativo=url_lista|ativo_em:request.path %}
+        {% include "_menu_item.html" with url=url_resumo rotulo="Resumo" ativo=url_resumo|ativo_em:request.path %}
+        {% include "_menu_item.html" with url=url_dados rotulo="Meus dados" ativo=url_dados|ativo_em:request.path %}
+      </ul>
+      <ul class="navbar-nav align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="{% url 'contas:senha' %}">Trocar senha</a></li>
+        <li class="nav-item">
+          <form method="post" action="{% url 'contas:sair' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-link nav-link">Sair</button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="radar-captura border-bottom d-print-none">
+  <div class="container-xl py-2">
+    <form method="post" action="{% url 'demandas:capturar' %}" class="d-flex flex-wrap gap-2" data-trava-envio>
+      {% csrf_token %}
+      <input type="hidden" name="proximo" value="{{ request.get_full_path }}">
+      <label for="captura-titulo" class="visually-hidden">Nova demanda</label>
+      <input id="captura-titulo" name="titulo" class="form-control flex-grow-1 radar-captura-titulo"
+             placeholder="Nova demanda… (atalho: n)" maxlength="200" required autocomplete="off">
+      <label for="captura-origem" class="visually-hidden">Origem</label>
+      <select id="captura-origem" name="origem" class="form-select w-auto">
+        {% for valor, rotulo in captura_origens %}
+          <option value="{{ valor }}"{% if valor == "outro" %} selected{% endif %}>{{ rotulo }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary">Registrar</button>
+    </form>
+  </div>
+</div>
+
+<main id="conteudo" class="container-xl py-4">
+  {% if messages %}
+    <div class="d-print-none">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="{% if message.level >= 30 %}alert{% else %}status{% endif %}">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% block conteudo %}{% endblock %}
+</main>
+
+<footer class="container-xl pb-4 small text-secondary d-print-none">
+  Radar de Demandas · <a href="{% url 'contas:privacidade' %}">Privacidade</a> · Atalhos: <kbd>n</kbd> nova demanda, <kbd>/</kbd> buscar
+</footer>
+{% endblock %}

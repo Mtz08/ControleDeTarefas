@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titulo %}Meus dados{% endblock %}
+{% block conteudo %}
+<div class="radar-texto">
+  <h1 class="h3 mb-3">Meus dados</h1>
+  <p>Você tem <strong>{{ total_demandas }}</strong> demanda(s) registrada(s). Veja também a página de <a href="{% url 'contas:privacidade' %}">Privacidade</a>.</p>
+
+  <div class="card mb-3"><div class="card-body">
+    <h2 class="h5">Exportar para Excel</h2>
+    <p class="mb-2">Todas as demandas em CSV (separador “;”, acentos preservados).</p>
+    <a class="btn btn-outline-primary" href="{% url 'contas:exportar_csv' %}">Baixar CSV</a>
+  </div></div>
+
+  <div class="card mb-3"><div class="card-body">
+    <h2 class="h5">Backup completo (JSON)</h2>
+    <p class="mb-2">Cópia de segurança de tudo, restaurável com <code>python manage.py loaddata</code>. Faça com frequência: a restauração automática do banco gratuito cobre só 6 horas.</p>
+    <div class="alert alert-warning py-2" role="note">
+      O arquivo contém seus dados de trabalho e o <em>hash</em> da sua senha. Guarde em local seguro (pasta pessoal protegida do computador do trabalho) e não envie por e-mail ou chat.
+    </div>
+    <form method="post" action="{% url 'contas:backup_json' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-primary">Baixar backup</button>
+    </form>
+  </div></div>
+
+  <div class="card mb-3"><div class="card-body">
+    <h2 class="h5">Retenção</h2>
+    <p class="mb-2">{{ total_retidas }} demanda(s) encerrada(s) há mais tempo que o prazo de retenção.</p>
+    <a class="btn btn-outline-secondary" href="{% url 'contas:retencao' %}">Revisar retenção</a>
+  </div></div>
+
+  <div class="card border-danger"><div class="card-body">
+    <h2 class="h5 text-danger">Apagar todos os meus dados</h2>
+    <p class="mb-2">Apaga demandas, histórico, categorias e Top 3. Seu usuário é mantido. Não há como desfazer.</p>
+    <a class="btn btn-outline-danger" href="{% url 'contas:apagar_tudo' %}">Apagar tudo…</a>
+  </div></div>
+</div>
+{% endblock %}

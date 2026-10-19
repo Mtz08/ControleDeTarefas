@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block titulo %}Resumo do período{% endblock %}
+{% block conteudo %}
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+  <h1 class="h3 mb-0 me-auto">Resumo de {{ resumo.inicio|date:"d/m/Y" }} a {{ resumo.fim|date:"d/m/Y" }}</h1>
+  <div class="d-flex gap-2 d-print-none">
+    <button type="button" class="btn btn-outline-secondary" data-imprimir>Imprimir</button>
+    <a class="btn btn-outline-primary" href="{% url 'painel:resumo_csv' %}{% if querystring %}?{{ querystring }}{% endif %}">Exportar CSV</a>
+  </div>
+</div>
+
+<form method="get" class="card card-body mb-4 d-print-none">
+  {% include "_erros_form.html" %}
+  <div class="row g-2 align-items-end">
+    <div class="col-sm-4 col-lg-3">{% include "_campo.html" with campo=form.mes %}</div>
+    <div class="col-12 col-sm-auto mb-3 text-secondary">ou intervalo:</div>
+    <div class="col-sm-4 col-lg-3">{% include "_campo.html" with campo=form.de %}</div>
+    <div class="col-sm-4 col-lg-3">{% include "_campo.html" with campo=form.ate %}</div>
+    <div class="col-auto mb-3"><button type="submit" class="btn btn-primary">Ver período</button></div>
+  </div>
+</form>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg"><div class="card h-100 radar-indicador"><div class="card-body">
+    <div class="radar-indicador-valor">{{ resumo.recebidas }}</div><div>recebidas</div>
+  </div></div></div>
+  <div class="col-6 col-lg"><div class="card h-100 radar-indicador"><div class="card-body">
+    <div class="radar-indicador-valor">{{ resumo.concluidas }}</div><div>concluídas</div>
+  </div></div></div>
+  <div class="col-6 col-lg"><div class="card h-100 radar-indicador"><div class="card-body">
+    <div class="radar-indicador-valor">{% if resumo.no_prazo.percentual is not None %}{{ resumo.no_prazo.percentual }}%{% else %}—{% endif %}</div>
+    <div>concluídas no prazo</div>
+    <div class="small text-secondary">{{ resumo.no_prazo.no_prazo }} de {{ resumo.no_prazo.com_prazo }} com prazo · {{ resumo.no_prazo.sem_prazo }} sem prazo</div>
+  </div></div></div>
+  <div class="col-6 col-lg"><div class="card h-100 radar-indicador"><div class="card-body">
+    <div class="radar-indicador-valor">{% if resumo.tempo.media is not None %}{{ resumo.tempo.media }}{% else %}—{% endif %}</div>
+    <div>dias, em média, para concluir</div>
+    <div class="small text-secondary">mediana: {% if resumo.tempo.mediana is not None %}{{ resumo.tempo.mediana }} dia(s){% else %}—{% endif %}</div>
+  </div></div></div>
+  <div class="col-6 col-lg"><div class="card h-100 radar-indicador"><div class="card-body">
+    <div class="radar-indicador-valor">{{ resumo.atrasadas_hoje }}</div><div>atrasadas hoje</div>
+  </div></div></div>
+</div>
+
+<h2 class="h5">Recebidas por canal, categoria e prioridade</h2>
+<div class="row g-4 mb-4">
+  {% include "painel/_distribuicao.html" with titulo="Origem" itens=resumo.por_origem %}
+  {% include "painel/_distribuicao.html" with titulo="Categoria" itens=resumo.por_categoria %}
+  {% include "painel/_distribuicao.html" with titulo="Prioridade" itens=resumo.por_prioridade %}
+</div>
+
+<h2 class="h5">Recebidas × concluídas por semana</h2>
+<div class="table-responsive">
+  <table class="table table-sm align-middle radar-tabela-barras">
+    <thead><tr><th scope="col">Semana (seg. a dom.)</th><th scope="col">Recebidas</th><th scope="col">Concluídas</th></tr></thead>
+    <tbody>
+      {% for linha in resumo.semanas %}
+        <tr>
+          <th scope="row" class="fw-normal text-nowrap">{{ linha.semana.inicio|date:"d/m" }} a {{ linha.semana.fim|date:"d/m" }}</th>
+          <td><span class="radar-barra" data-largura="{{ linha.largura_recebidas }}"></span> {{ linha.semana.recebidas }}</td>
+          <td><span class="radar-barra radar-barra-concluidas" data-largura="{{ linha.largura_concluidas }}"></span> {{ linha.semana.concluidas }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}Excluir demanda{% endblock %}
+{% block conteudo %}
+<div class="radar-estreito">
+  <h1 class="h4 mb-3">Excluir demanda?</h1>
+  <p class="text-break"><strong>{{ demanda.titulo }}</strong></p>
+  <p>A demanda, o histórico dela e a presença no Top 3 serão apagados. Não há como desfazer.</p>
+  <form method="post" class="d-flex gap-2" data-trava-envio>
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Excluir</button>
+    <a class="btn btn-link" href="{% url 'demandas:detalhe' demanda.pk %}">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

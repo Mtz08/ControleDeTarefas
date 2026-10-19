@@ -1,0 +1,19 @@
+{% comment %}Tabela com barras em CSS. Variáveis: titulo, itens (Distribuicao).{% endcomment %}
+<section class="col-md-4">
+  <h3 class="h6">{{ titulo }}</h3>
+  {% if itens %}
+    <table class="table table-sm radar-tabela-barras">
+      <tbody>
+        {% for item in itens %}
+          <tr>
+            <th scope="row" class="fw-normal">{{ item.rotulo }}</th>
+            <td class="w-50"><span class="radar-barra" data-largura="{{ item.largura }}"></span></td>
+            <td class="text-end">{{ item.quantidade }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="text-secondary small">Sem dados no período.</p>
+  {% endif %}
+</section>

@@ -1,0 +1,53 @@
+{% extends "base.html" %}{% load radar %}
+{% block titulo %}{{ demanda.titulo }}{% endblock %}
+{% block conteudo %}
+<p class="mb-2 d-print-none"><a href="{% url 'demandas:lista' %}">← Demandas</a></p>
+<div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+  <h1 class="h3 mb-0 me-auto text-break">{{ demanda.titulo }}</h1>
+  {% if demanda|atrasada %}<span class="badge radar-atrasada">Atrasada</span>{% elif demanda|vence_hoje %}<span class="badge radar-hoje">Vence hoje</span>{% endif %}
+  {% include "demandas/_prioridade.html" %}
+  {% include "demandas/_status.html" %}
+</div>
+{% include "demandas/_acoes.html" with completo=True %}
+
+<div class="row g-4 mt-1">
+  <div class="col-lg-7">
+    <div class="card"><div class="card-body">
+      {% if demanda.descricao %}<p class="radar-pre">{{ demanda.descricao }}</p>{% else %}<p class="text-secondary">Sem descrição.</p>{% endif %}
+      <dl class="row mb-0 small">
+        <dt class="col-sm-4">Origem</dt><dd class="col-sm-8">{{ demanda.get_origem_display }}</dd>
+        <dt class="col-sm-4">Categoria</dt><dd class="col-sm-8">{{ demanda.categoria.nome|default:"—" }}</dd>
+        <dt class="col-sm-4">Solicitante</dt><dd class="col-sm-8">{{ demanda.solicitante|default:"—" }}</dd>
+        <dt class="col-sm-4">Referência</dt><dd class="col-sm-8">{{ demanda.referencia|default:"—" }}</dd>
+        <dt class="col-sm-4">Prazo</dt><dd class="col-sm-8">{{ demanda.prazo|date:"d/m/Y"|default:"Sem prazo" }}</dd>
+        <dt class="col-sm-4">Recebida em</dt><dd class="col-sm-8">{{ demanda.recebida_em|date:"d/m/Y H:i" }} ({{ demanda.recebida_em|ha_dias }})</dd>
+        {% if demanda.status == "aguardando" %}
+        <dt class="col-sm-4">Aguardando</dt><dd class="col-sm-8">{{ demanda.aguardando_quem }} ({{ demanda.status_alterado_em|ha_dias }})</dd>
+        {% endif %}
+        {% if demanda.concluida_em %}
+        <dt class="col-sm-4">Concluída em</dt><dd class="col-sm-8">{{ demanda.concluida_em|date:"d/m/Y H:i" }}</dd>
+        {% endif %}
+        <dt class="col-sm-4">Última alteração</dt><dd class="col-sm-8">{{ demanda.atualizada_em|date:"d/m/Y H:i" }}</dd>
+      </dl>
+    </div></div>
+  </div>
+
+  <div class="col-lg-5">
+    <h2 class="h5">Histórico</h2>
+    <form method="post" action="{% url 'demandas:anotar' demanda.pk %}" class="mb-3 d-print-none" data-trava-envio>
+      {% csrf_token %}
+      {% include "_campo.html" with campo=nota_form.texto %}
+      <button type="submit" class="btn btn-sm btn-outline-primary">Anotar</button>
+    </form>
+    <ol class="list-unstyled radar-historico">
+      {% for evento in eventos reversed %}
+        <li class="mb-2">
+          <div class="small text-secondary">{{ evento.criado_em|date:"d/m/Y H:i" }} · {{ evento.get_tipo_display }}</div>
+          {% with descricao=evento|descrever_evento %}{% if descricao %}<div>{{ descricao }}</div>{% endif %}{% endwith %}
+          {% if evento.texto %}<div class="radar-pre">{{ evento.texto }}</div>{% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+</div>
+{% endblock %}

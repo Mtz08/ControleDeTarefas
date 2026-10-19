@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block titulo %}Privacidade{% endblock %}
+{% block conteudo %}
+<div class="radar-texto">
+  <h1 class="h3 mb-3">Privacidade</h1>
+
+  <h2 class="h5 mt-4">O que é guardado</h2>
+  <ul>
+    <li>Seu usuário e o <em>hash</em> da senha (a senha em si nunca é guardada).</li>
+    <li>As demandas que você registra: título, descrição, solicitante (nome ou área), referência (empresa, sistema ou código interno), origem, categoria, prioridade, prazo, datas e status.</li>
+    <li>O histórico de cada demanda e o Top 3 de cada dia.</li>
+    <li>Tentativas de login com erro (usuário e IP), apagadas automaticamente após 30 minutos, para bloquear ataques de força bruta.</li>
+    <li>A sessão de login, que expira em 12 horas.</li>
+  </ul>
+
+  <h2 class="h5 mt-4">Para quê</h2>
+  <p>Exclusivamente para organizar e acompanhar suas demandas de trabalho (LGPD, art. 6º, I e III). Não há compartilhamento, propaganda nem análise por terceiros.</p>
+
+  <h2 class="h5 mt-4">O que não registrar</h2>
+  <p>CPF, RG, dados bancários, salários ou dados sensíveis (por exemplo, de saúde) de clientes ou colegas. Identifique clientes pelo nome da empresa ou por código interno. Se um texto parecer conter CPF, o sistema avisa.</p>
+
+  <h2 class="h5 mt-4">Onde fica</h2>
+  <p>A aplicação roda no <strong>Render</strong> e o banco de dados fica no <strong>Neon</strong>, ambos nos <strong>Estados Unidos</strong> (transferência internacional, LGPD art. 33). A empresa é a controladora dos dados de trabalho; o uso foi validado com gestor e TI.</p>
+
+  <h2 class="h5 mt-4">Seus direitos e controles</h2>
+  <ul>
+    <li><a href="{% url 'contas:meus_dados' %}">Meus dados</a>: exportar tudo em CSV, baixar backup completo, apagar tudo.</li>
+    <li><a href="{% url 'contas:retencao' %}">Retenção</a>: demandas encerradas há mais de {{ retencao_meses }} meses, para exportar e excluir manualmente. Nada é apagado automaticamente.</li>
+    <li>Cada demanda pode ser excluída individualmente.</li>
+  </ul>
+</div>
+{% endblock %}

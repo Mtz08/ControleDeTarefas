@@ -1,0 +1,12 @@
+{% load radar %}{% if campo.is_hidden %}{{ campo }}{% elif campo.widget_type == "checkbox" %}
+<div class="form-check mb-3">
+  {{ campo|com_classe }}
+  <label class="form-check-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+  {% for erro in campo.errors %}<div class="invalid-feedback d-block">{{ erro }}</div>{% endfor %}
+</div>{% else %}
+<div class="mb-3">
+  <label class="form-label" for="{{ campo.id_for_label }}">{{ campo.label }}{% if campo.field.required %} <span class="text-danger" aria-hidden="true">*</span>{% endif %}</label>
+  {{ campo|com_classe }}
+  {% if campo.help_text %}<div class="form-text" id="{{ campo.auto_id }}_helptext">{{ campo.help_text }}</div>{% endif %}
+  {% for erro in campo.errors %}<div class="invalid-feedback d-block">{{ erro }}</div>{% endfor %}
+</div>{% endif %}

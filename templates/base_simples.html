@@ -1,0 +1,17 @@
+{% load static %}<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{% block titulo %}Radar de Demandas{% endblock %} · Radar</title>
+  <link rel="icon" href="{% static 'img/radar.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap-5.3.8/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/radar.css' %}">
+</head>
+<body {% block atributos_body %}{% endblock %}>
+{% block corpo %}{% endblock %}
+<script src="{% static 'vendor/bootstrap-5.3.8/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/radar.js' %}"></script>
+</body>
+</html>

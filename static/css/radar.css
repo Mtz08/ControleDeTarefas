@@ -1,0 +1,113 @@
+/* Identidade visual do Radar de Demandas (sobre o Bootstrap 5.3).
+   Cores com texto branco testadas para contraste WCAG AA (≥ 4,5:1). */
+
+:root {
+  --radar-primaria: #0f4c5c;
+  --radar-primaria-escura: #0b3a46;
+  --radar-fundo: #f7f9fa;
+  --radar-texto: #1f2933;
+  --radar-alta: #b42318;
+  --radar-media: #b54708;
+  --radar-baixa: #475467;
+  --radar-concluida: #067647;
+  --radar-andamento: #175cd3;
+
+  --bs-body-bg: var(--radar-fundo);
+  --bs-body-color: var(--radar-texto);
+  --bs-link-color: var(--radar-primaria);
+  --bs-link-color-rgb: 15, 76, 92;
+  --bs-link-hover-color: var(--radar-primaria-escura);
+  --bs-primary: var(--radar-primaria);
+  --bs-primary-rgb: 15, 76, 92;
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--radar-primaria);
+  --bs-btn-border-color: var(--radar-primaria);
+  --bs-btn-hover-bg: var(--radar-primaria-escura);
+  --bs-btn-hover-border-color: var(--radar-primaria-escura);
+  --bs-btn-active-bg: var(--radar-primaria-escura);
+  --bs-btn-active-border-color: var(--radar-primaria-escura);
+  --bs-btn-disabled-bg: var(--radar-primaria);
+  --bs-btn-disabled-border-color: var(--radar-primaria);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--radar-primaria);
+  --bs-btn-border-color: var(--radar-primaria);
+  --bs-btn-hover-bg: var(--radar-primaria);
+  --bs-btn-hover-border-color: var(--radar-primaria);
+  --bs-btn-active-bg: var(--radar-primaria-escura);
+  --bs-btn-active-border-color: var(--radar-primaria-escura);
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: var(--radar-primaria);
+  box-shadow: 0 0 0 0.2rem rgba(15, 76, 92, 0.25);
+}
+
+.form-check-input:checked {
+  background-color: var(--radar-primaria);
+  border-color: var(--radar-primaria);
+}
+
+/* Layout */
+.radar-nav { background-color: var(--radar-primaria); }
+.radar-captura { background-color: #fff; }
+.radar-marca { color: var(--radar-primaria); }
+.radar-estreito { max-width: 32rem; margin-inline: auto; }
+.radar-medio { max-width: 48rem; }
+.radar-texto { max-width: 48rem; }
+.radar-pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.radar-top { border-left: 4px solid var(--radar-primaria); }
+
+.radar-vazio {
+  padding: 1rem;
+  border: 1px dashed #c3ccd5;
+  border-radius: 0.5rem;
+  color: #475467;
+  background-color: #fff;
+}
+
+/* Prioridade e status: sempre cor + texto */
+.radar-prioridade-alta { background-color: var(--radar-alta); }
+.radar-prioridade-media { background-color: var(--radar-media); }
+.radar-prioridade-baixa { background-color: var(--radar-baixa); }
+
+.radar-status { background-color: #fff; border: 1px solid currentcolor; }
+.radar-status-nova { color: var(--radar-primaria); }
+.radar-status-a_fazer { color: var(--radar-baixa); }
+.radar-status-em_andamento { color: var(--radar-andamento); }
+.radar-status-aguardando { color: var(--radar-media); }
+.radar-status-concluida { color: var(--radar-concluida); }
+.radar-status-cancelada { color: var(--radar-baixa); text-decoration: line-through; }
+
+.radar-atrasada { background-color: var(--radar-alta); }
+.radar-hoje { background-color: var(--radar-media); }
+.radar-cobrar { border-left: 4px solid var(--radar-media); }
+
+/* Indicadores e barras do resumo (largura definida pelo radar.js, sem estilo inline) */
+.radar-indicador-valor { font-size: 2rem; font-weight: 600; color: var(--radar-primaria); line-height: 1.1; }
+.radar-barra {
+  display: inline-block;
+  height: 0.75rem;
+  width: 0;
+  min-width: 2px;
+  vertical-align: middle;
+  border-radius: 2px;
+  background-color: var(--radar-primaria);
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+.radar-tabela-barras td:has(.radar-barra) { min-width: 8rem; }
+.radar-barra-concluidas { background-color: var(--radar-concluida); }
+
+/* Impressão: só o conteúdo, em preto e branco legível */
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  main { padding: 0 !important; }
+  a { color: inherit; text-decoration: none; }
+  .card { border: 1px solid #999; break-inside: avoid; }
+}

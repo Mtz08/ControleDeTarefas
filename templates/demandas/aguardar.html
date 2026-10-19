@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block titulo %}Aguardar terceiro{% endblock %}
+{% block conteudo %}
+<div class="radar-estreito">
+  <h1 class="h4 mb-1">Aguardar terceiro</h1>
+  <p class="text-secondary text-break">{{ demanda.titulo }}</p>
+  <form method="post" class="card card-body" data-trava-envio>
+    {% csrf_token %}
+    {{ form.versao }}
+    {% include "_campo.html" with campo=form.aguardando_quem %}
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary">Marcar como aguardando</button>
+      <a class="btn btn-link" href="{% url 'demandas:detalhe' demanda.pk %}">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

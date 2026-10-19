@@ -1,0 +1,13 @@
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+extend-exclude = ["*/migrations/*"]
+
+[tool.ruff.lint]
+# E/W/F: erros básicos · I: ordem dos imports · B: armadilhas comuns
+# UP: sintaxe moderna · DJ: boas práticas Django · S: segurança (bandit)
+select = ["E", "W", "F", "I", "B", "UP", "DJ", "S"]
+
+[tool.ruff.lint.per-file-ignores]
+# Senhas fictícias em testes não são segredos.
+"*/tests/*" = ["S106"]

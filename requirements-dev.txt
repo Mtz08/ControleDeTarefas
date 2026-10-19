@@ -1,0 +1,4 @@
+# Dependências de desenvolvimento: produção + ferramentas de qualidade.
+-r requirements.txt
+ruff==0.17.1
+pip-audit==2.10.1

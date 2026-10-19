@@ -1,0 +1,9 @@
+{% extends "base_simples.html" %}
+{% block titulo %}Acesso bloqueado{% endblock %}
+{% block corpo %}
+<main class="container py-5 radar-estreito">
+  <h1 class="h3">Acesso temporariamente bloqueado</h1>
+  <p>Foram muitas tentativas de login com erro. Por segurança, novas tentativas deste usuário, a partir desta rede, estão bloqueadas por 30 minutos.</p>
+  <p class="text-secondary small">Esqueceu a senha? Veja no README como redefini-la pelo terminal.</p>
+</main>
+{% endblock %}

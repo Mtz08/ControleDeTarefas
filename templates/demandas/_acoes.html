@@ -1,0 +1,24 @@
+{% comment %}Ações rápidas. Variáveis: demanda; completo (bool) mostra também cancelar/editar/excluir.{% endcomment %}
+<div class="d-flex flex-wrap gap-1 mt-2 radar-acoes d-print-none">
+  {% if demanda.status == "nova" %}
+    <a class="btn btn-sm btn-primary" href="{% url 'demandas:editar' demanda.pk %}">Triar</a>
+  {% endif %}
+  {% if demanda.aberta %}
+    {% if demanda.status != "em_andamento" %}
+      {% include "demandas/_botao_acao.html" with nome="iniciar" rotulo="Iniciar" estilo="btn-outline-primary" %}
+    {% endif %}
+    {% if demanda.status != "aguardando" %}
+      <a class="btn btn-sm btn-outline-secondary" href="{% url 'demandas:aguardar' demanda.pk %}">Aguardar</a>
+    {% endif %}
+    {% include "demandas/_botao_acao.html" with nome="concluir" rotulo="Concluir" estilo="btn-outline-success" %}
+    {% if completo %}
+      {% include "demandas/_botao_acao.html" with nome="cancelar" rotulo="Cancelar demanda" estilo="btn-outline-secondary" %}
+    {% endif %}
+  {% else %}
+    {% include "demandas/_botao_acao.html" with nome="reabrir" rotulo="Reabrir" estilo="btn-outline-primary" %}
+  {% endif %}
+  {% if completo %}
+    <a class="btn btn-sm btn-outline-secondary" href="{% url 'demandas:editar' demanda.pk %}">Editar</a>
+    <a class="btn btn-sm btn-outline-danger" href="{% url 'demandas:excluir' demanda.pk %}">Excluir</a>
+  {% endif %}
+</div>

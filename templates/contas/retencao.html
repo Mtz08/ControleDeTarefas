@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block titulo %}Retenção{% endblock %}
+{% block conteudo %}
+<h1 class="h3 mb-2">Retenção</h1>
+<p>Demandas concluídas ou canceladas antes de <strong>{{ limite|date:"d/m/Y" }}</strong>. Nada é apagado automaticamente: exporte o que quiser guardar e exclua manualmente.</p>
+
+{% if demandas %}
+  <p><a class="btn btn-outline-primary btn-sm" href="{% url 'contas:retencao_csv' %}">Exportar estas demandas (CSV)</a></p>
+  <form method="post" action="{% url 'contas:retencao_excluir' %}" data-trava-envio>
+    {% csrf_token %}
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead><tr>
+          <th scope="col"><span class="visually-hidden">Selecionar</span></th>
+          <th scope="col">Título</th><th scope="col">Status</th><th scope="col">Encerrada em</th>
+        </tr></thead>
+        <tbody>
+          {% for demanda in demandas %}
+          <tr>
+            <td><input class="form-check-input" type="checkbox" name="demanda" value="{{ demanda.pk }}" id="ret-{{ demanda.pk }}" checked></td>
+            <td><label for="ret-{{ demanda.pk }}">{{ demanda.titulo }}</label></td>
+            <td>{% include "demandas/_status.html" %}</td>
+            <td>{{ demanda.status_alterado_em|date:"d/m/Y" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <button type="submit" class="btn btn-danger">Excluir selecionadas</button>
+  </form>
+{% else %}
+  <div class="radar-vazio">Nenhuma demanda passou do prazo de retenção.</div>
+{% endif %}
+{% endblock %}

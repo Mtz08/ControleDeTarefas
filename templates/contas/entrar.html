@@ -1,0 +1,30 @@
+{% extends "base_simples.html" %}
+{% block titulo %}Entrar{% endblock %}
+{% block corpo %}
+<main class="container py-5 radar-estreito">
+  <h1 class="h3 mb-1 radar-marca">Radar de Demandas</h1>
+  <p class="text-secondary mb-4">Entre para ver suas demandas.</p>
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      {% if form.errors %}
+        <div class="alert alert-danger" role="alert">Usuário ou senha incorretos.</div>
+      {% endif %}
+      <form method="post" data-trava-envio>
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+        <div class="mb-3">
+          <label class="form-label" for="id_username">Usuário</label>
+          <input class="form-control" type="text" name="username" id="id_username" autocomplete="username"
+                 value="{{ form.username.value|default:'' }}" required autofocus>
+        </div>
+        <div class="mb-4">
+          <label class="form-label" for="id_password">Senha</label>
+          <input class="form-control" type="password" name="password" id="id_password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Entrar</button>
+      </form>
+    </div>
+  </div>
+  <p class="small text-secondary mt-3">O primeiro acesso do dia pode levar cerca de 1 minuto: o servidor gratuito estava em pausa.</p>
+</main>
+{% endblock %}

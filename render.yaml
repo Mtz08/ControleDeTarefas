@@ -1,0 +1,26 @@
+# Blueprint do Render: um único Web Service no plano Free, região Virginia.
+# A versão do Python vem do arquivo .python-version.
+services:
+  - type: web
+    name: radar-demandas
+    runtime: python
+    plan: free
+    region: virginia
+    branch: main
+    autoDeployTrigger: commit
+    buildCommand: bash build.sh
+    startCommand: gunicorn config.wsgi:application
+    healthCheckPath: /saude
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false # você cola no painel: connection string DIRETA do radar-prod
+      - key: ADMIN_URL
+        sync: false # você define no painel: um caminho difícil de adivinhar, terminado em /
+      - key: WEB_CONCURRENCY
+        value: "2"
+      - key: PROXIES_CONFIAVEIS
+        value: "1"
+      - key: HSTS_SEGUNDOS
+        value: "3600"

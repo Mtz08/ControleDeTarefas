@@ -1,0 +1,30 @@
+# Segredos (nunca versionar)
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Django
+staticfiles/
+*.sqlite3
+
+# Ferramentas
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Backups e exportações baixados localmente (contêm dados de trabalho)
+backup*.json
+*.csv
+
+# Editor e sistema
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

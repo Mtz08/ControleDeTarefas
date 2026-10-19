@@ -1,0 +1,4 @@
+# Normaliza fins de linha no repositório.
+* text=auto
+# Scripts executados no Render (Linux) precisam de LF, mesmo editados no Windows.
+*.sh text eol=lf

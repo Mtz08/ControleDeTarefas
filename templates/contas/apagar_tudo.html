@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titulo %}Apagar todos os dados{% endblock %}
+{% block conteudo %}
+<div class="radar-estreito">
+  <h1 class="h3 mb-3 text-danger">Apagar todos os meus dados</h1>
+  <p>Isto apaga <strong>todas</strong> as demandas, o histórico, as categorias e o Top 3. Seu usuário continua existindo. <strong>Não há como desfazer.</strong></p>
+  <p>Antes, considere <a href="{% url 'contas:meus_dados' %}">baixar o backup</a>.</p>
+  <form method="post" data-trava-envio>
+    {% csrf_token %}
+    {% for campo in form %}{% include "_campo.html" %}{% endfor %}
+    <button type="submit" class="btn btn-danger">Apagar tudo</button>
+    <a class="btn btn-link" href="{% url 'contas:meus_dados' %}">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

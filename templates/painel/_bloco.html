@@ -1,0 +1,11 @@
+{% comment %}Bloco do painel. Variáveis: titulo, demandas, vazio (mensagem), id_bloco.{% endcomment %}
+<section class="mb-4" aria-labelledby="{{ id_bloco }}">
+  <h2 class="h5 d-flex align-items-center gap-2" id="{{ id_bloco }}">{{ titulo }} <span class="badge text-bg-light border">{{ demandas|length }}</span></h2>
+  {% if demandas %}
+    <ul class="list-group">
+      {% for demanda in demandas %}{% include "demandas/_item.html" with acoes=True %}{% endfor %}
+    </ul>
+  {% else %}
+    <div class="radar-vazio">{{ vazio }}</div>
+  {% endif %}
+</section>
